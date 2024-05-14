@@ -1,27 +1,15 @@
 package unpacker
 
 import (
-	"fmt"
-	"os"
-	"path/filepath"
+	_ "embed"
 	"testing"
 )
 
-var loadedTestInput, loadedTestExpected string
+//go:embed testdata/test-packer-62-input.js
+var packer62Input string
 
-func TestMain(m *testing.M) {
-	loadTestData := func(path string) string {
-		data, err := os.ReadFile(path)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "Test setup failed:", err)
-			os.Exit(1)
-		}
-		return string(data)
-	}
-	loadedTestInput = loadTestData(filepath.FromSlash("testdata/test-packer-62-input.js"))
-	loadedTestExpected = loadTestData(filepath.FromSlash("testdata/test-packer-non62-input.js"))
-	os.Exit(m.Run())
-}
+//go:embed testdata/test-packer-non62-input.js
+var packer62Expected string
 
 func TestNewDEUnpacker(t *testing.T) {
 	test := func(input string, expected bool) {
@@ -70,7 +58,7 @@ func TestUnpack(t *testing.T) {
 		"$(document).ready(function(){ $('.r8ce6').html(52136); $('.rfab0').html(8088); $('.rb0de').html(555); $('.r542c').html(65103)})",
 	)
 	test(
-		loadedTestInput,
-		loadedTestExpected,
+		packer62Input,
+		packer62Expected,
 	)
 }
